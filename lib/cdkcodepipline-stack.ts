@@ -3,6 +3,7 @@ import { Construct } from 'constructs';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 import  * as pipeline from 'aws-cdk-lib/aws-codepipeline';
 import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
+import * as secrets from 'aws-cdk-lib/aws-secretsmanager';
 
 
 export class CdkcodepiplineStack extends cdk.Stack {
@@ -17,6 +18,7 @@ export class CdkcodepiplineStack extends cdk.Stack {
       synth: new ShellStep('SynthStep', {
         input: CodePipelineSource.gitHub('thenamuthan/cdkcodepipline', 'main'),
         commands: ['npm ci', 'npm run build', 'npx cdk synth'],
+        
       }),
     });
     
