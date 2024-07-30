@@ -4,6 +4,8 @@ import { Construct } from 'constructs';
 import  * as pipeline from 'aws-cdk-lib/aws-codepipeline';
 import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
 import * as secrets from 'aws-cdk-lib/aws-secretsmanager';
+import { PipelineAppStage } from '../lib/demoawspipelie-app-stack';
+import { ManualApprovalStep } from 'aws-cdk-lib/pipelines';
 
 
 export class CdkcodepiplineStack extends cdk.Stack {
@@ -21,6 +23,19 @@ export class CdkcodepiplineStack extends cdk.Stack {
         
       }),
     });
+
+    // creating test stage
+    const testStage = pipeline.addStage(new PipelineAppStage(this, 'TestStage', {
+      env: { account: '905418016855', region: 'us-east-2' },
+      stageName: 'Test',
+    }));
+
+    testStage.addPost(new ManualApprovalStep('ManualApproval'));
+
+    const prodstage = pipeline.addStage( new PipelineAppStage(this, 'prodstage', {
+      env: { account: '905418016855', region: 'us-east-2' },
+      stageName: 'prod',
+    }));
     
   }
 }
